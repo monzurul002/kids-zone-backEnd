@@ -106,14 +106,33 @@ async function run() {
             const result = await myToys.deleteOne(query);
             res.send(result)
         })
-
+        //probably this api is not used
         app.get("/updatetoy/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await myToys.findOne(query);
             res.send(result)
         })
+        //update info
+        app.put("/updatetoy/:id", async (req, res) => {
+            const id = req.params.id;
 
+            const updateInfo = req.body;
+
+            const filter = { _id: new ObjectId(id) }
+
+            const updateDoc = {
+                $set: {
+                    name: updateInfo.name,
+                    quantity: updateInfo.quantity,
+                    description: updateInfo.description
+                }
+
+            }
+            const result = await myToys.updateOne(filter, updateDoc, { upsert: true })
+            res.send(result)
+
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
